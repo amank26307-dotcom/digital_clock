@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Clock</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(circle at 50% 20%, #1b1f3b, #05060f 70%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color:#fff;
+  }
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 48px 56px;
+    text-align:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    min-width: 340px;
+  }
+  .time {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg,#7fd8ff,#a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .date {
+    margin-top: 10px;
+    font-size: 1.25rem;
+    color: #cfd3ff;
+    letter-spacing: 1px;
+  }
+  .divider {
+    margin: 24px 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  .stats {
+    display:flex;
+    gap: 24px;
+    justify-content:center;
+  }
+  .stat {
+    background: rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 16px 20px;
+    min-width: 130px;
+  }
+  .stat .num {
+    font-size: 1.8rem;
+    font-weight:700;
+    color:#7fd8ff;
+  }
+  .stat .label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9ca3af;
+    margin-top:4px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="time" id="time">--:--:--</div>
+    <div class="date" id="date">Loading date...</div>
+    <div class="divider"></div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num" id="daysToMonth">-</div>
+        <div class="label">Days to next month</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="daysToYear">-</div>
+        <div class="label">Days to next year</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+
+  // Time
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('time').textContent = `${h}:${m}:${s}`;
+
+  // Date
+  const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+
+  // Days left in current month
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  const msToMonthEnd = endOfMonth - now;
+  const daysToMonth = Math.ceil(msToMonthEnd / (1000*60*60*24));
+
+  // Days left in current year
+  const endOfYear = new Date(now.getFullYear()+1, 0, 1);
+  const msToYearEnd = endOfYear - now;
+  const daysToYear = Math.ceil(msToYearEnd / (1000*60*60*24));
+
+  document.getElementById('daysToMonth').textContent = daysToMonth;
+  document.getElementById('daysToYear').textContent = daysToYear;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
